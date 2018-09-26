@@ -1,14 +1,19 @@
 package com.udacity.gradle.builditbigger;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+
+import tech.niocoders.com.jokelibrary.jokeActivity;
 
 
 public class MainActivity extends AppCompatActivity {
+    public static final String JOKE_TEXT="JOKE_TEXT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +44,22 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void showEndPointJokes(String text)
+    {
+        Class child =  jokeActivity.class;
+        Context context = this;
+        Bundle bundle = new Bundle();
+        bundle.putString(JOKE_TEXT, text);
+        Intent intent = new Intent(context,child);
+        intent.putExtras(bundle);
+        startActivity(intent);
+
+    }
+
     public void tellJoke(View view) {
-        Toast.makeText(this, "derp", Toast.LENGTH_SHORT).show();
+        //generate the joke
+        Pair<Context, String> taskList = new Pair<Context, String>(this,MainActivity.class.getSimpleName());
+       new GoogleEndPointsTask().execute(taskList);
     }
 
 
