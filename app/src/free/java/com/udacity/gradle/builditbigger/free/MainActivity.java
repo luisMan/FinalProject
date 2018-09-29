@@ -5,10 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.udacity.gradle.builditbigger.R;
 
 import tech.niocoders.com.jokelibrary.jokeActivity;
@@ -16,11 +22,19 @@ import tech.niocoders.com.jokelibrary.jokeActivity;
 
 public class MainActivity extends AppCompatActivity {
     public static final String JOKE_TEXT="JOKE_TEXT";
+    public static ProgressBar loader;
 
+    private InterstitialAd mIterstitialAd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        loader = findViewById(R.id.progressBar);
+        MobileAds.initialize(this,"ca-app-pub-7712232350432668/2678557207");
+
+        //lets instantiate our dd
+        mIterstitialAd = new InterstitialAd(this);
+        mIterstitialAd.setAdUnitId("ca-app-pub-7712232350432668/2678557207");
     }
 
 
@@ -60,8 +74,50 @@ public class MainActivity extends AppCompatActivity {
 
     public void tellJoke(View view) {
         //generate the joke
-        Pair<Context, String> taskList = new Pair<Context, String>(this, MainActivity.class.getSimpleName());
-        new GoogleEndPointsTask().execute(taskList);
+        //load the interstitial ad
+        mIterstitialAd.loadAd(new AdRequest.Builder().build());
+        loader.setVisibility(View.VISIBLE);
+        //now lets implement listener to do some great work
+        mIterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+              //lets hide the progressbar and show the add
+                loader.setVisibility(View.INVISIBLE);
+                if (mIterstitialAd.isLoaded()) {
+                    mIterstitialAd.show();
+                } else {
+                    Log.d("TAG", "The interstitial wasn't loaded yet.");
+                }
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+                loader.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when the ad is displayed.
+                loader.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+                loader.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when when the interstitial ad is closed.
+                loader.setVisibility(View.INVISIBLE);
+                 final Context context =  MainActivity.this;
+                Pair<Context, String> taskList = new Pair<Context, String>(context, MainActivity.class.getSimpleName());
+                new GoogleEndPointsTask().execute(taskList);
+            }
+        });
+
     }
 
 
