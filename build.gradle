@@ -20,3 +20,35 @@ allprojects {
         google()
     }
 }
+
+task startEndpoint(dependsOn: ":backend:appengineStart"){
+    doLast{
+        println "Executed the cloud endPoints engine started"
+    }
+}
+
+//the test file is store at app/build/reports/androidTests/connected/flavors/FREE/index.html
+task AsynchronomousTest(dependsOn: ":app:connectedAndroidTest"){
+    mustRunAfter "startEndpoint"
+    doLast{
+        println "Extracted jokes"
+    }
+    finalizedBy "stopEndPoint"
+}
+
+task stopEndPoint(dependsOn: ":backend:appengineStop"){
+    doLast{
+        println "stoped engine server"
+    }
+
+}
+
+task completeConfiguration {
+    dependsOn "AsynchronomousTest"
+    mustRunAfter "startEndpoint"
+    finalizedBy "stopEndPoint"
+    doLast{
+        println "all configurations have run successfully"
+    }
+
+}

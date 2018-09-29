@@ -41,7 +41,9 @@ public class GoogleEndPointsTask extends AsyncTask<Pair<Context, String>, Void,S
 
         //this is returning an object context activity it could be type fragment
         context = params[0].first;
-        myParentActivity = (MainActivity)context;
+
+            myParentActivity = (MainActivity)context;
+
         String name = params[0].second;
 
         try {
@@ -53,6 +55,7 @@ public class GoogleEndPointsTask extends AsyncTask<Pair<Context, String>, Void,S
 
     @Override
     protected void onPostExecute(String result) {
+
       myParentActivity.showEndPointJokes(result);
     }
 }

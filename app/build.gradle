@@ -20,17 +20,64 @@ android {
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
-        multiDexEnabled true
-
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
     }
+    variantFilter { variant ->
+        def names = variant.flavors*.name
+        // To check for a certain build type, use variant.buildType.name == "<buildType>"
+        if (names.contains("free") && names.contains("paid")) {
+            // Gradle ignores any variants that satisfy the conditions above.
+            setIgnore(true)
+        }
+    }
+
+    flavorDimensions "type"
+    productFlavors {
+        free {
+            applicationId 'com.udacity.gradle.builditbigger.free'
+            versionName "1.0f"
+            versionCode 1
+            dimension 'type'
+            minSdkVersion 16
+            targetSdkVersion 26
+        }
+        paid {
+            applicationId 'com.udacity.gradle.builditbigger.paid'
+            versionName "1.0p"
+            versionCode 1
+            dimension 'type'
+            minSdkVersion 16
+            targetSdkVersion 26
+        }
+    }
+
+
+    sourceSets {
+        free {
+            manifest.srcFile("src/free/AndroidManifest.xml")
+        }
+        paid {
+            manifest.srcFile("src/paid/AndroidManifest.xml")
+
+        }
+        }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+
+
+
 }
 
 dependencies {
@@ -41,8 +88,9 @@ dependencies {
     implementation 'com.google.api-client:google-api-client:1.23.0'
     implementation 'com.google.http-client:google-http-client-android:1.23.0'
     implementation 'com.google.code.findbugs:jsr305:3.0.1'
-    //I spend to days figuring this section out because I though MyApi was a custom class object :-(
+    //I spend two days figuring this section out because I though MyApi was a custom class object :-(
     endpointsServer project(path: ':backend', configuration: 'endpoints')
+
     //my java libraries
     implementation project(':jokeGenerator')
     implementation project(':jokelibrary')
@@ -52,5 +100,6 @@ dependencies {
     })
 
     testImplementation 'junit:junit:4.12'
+    freeImplementation 'com.google.android.gms:play-services-ads:15.0.1'
 
 }
