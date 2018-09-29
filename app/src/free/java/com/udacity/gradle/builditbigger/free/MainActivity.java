@@ -30,11 +30,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loader = findViewById(R.id.progressBar);
-        MobileAds.initialize(this,"ca-app-pub-7712232350432668/2678557207");
+        MobileAds.initialize(this,"ca-app-pub-3777458171262382~1194396200");
 
         //lets instantiate our dd
         mIterstitialAd = new InterstitialAd(this);
-        mIterstitialAd.setAdUnitId("ca-app-pub-7712232350432668/2678557207");
+        mIterstitialAd.setAdUnitId("ca-app-pub-3777458171262382/4141382929");
     }
 
 
