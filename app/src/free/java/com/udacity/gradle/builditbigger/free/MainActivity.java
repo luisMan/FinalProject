@@ -22,6 +22,7 @@ import tech.niocoders.com.jokelibrary.jokeActivity;
 
 public class MainActivity extends AppCompatActivity {
     public static ProgressBar loader;
+    public Context context;
 
     private InterstitialAd mIterstitialAd;
     @Override
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loader = findViewById(R.id.progressBar);
+        this.context =  getApplicationContext();
         MobileAds.initialize(this,"ca-app-pub-3777458171262382~1194396200");
 
         //lets instantiate our dd
@@ -111,8 +113,7 @@ public class MainActivity extends AppCompatActivity {
             public void onAdClosed() {
                 // Code to be executed when when the interstitial ad is closed.
                 loader.setVisibility(View.INVISIBLE);
-                 final Context context =  MainActivity.this;
-                Pair<Context, String> taskList = new Pair<Context, String>(context, MainActivity.class.getSimpleName());
+                Pair<Context, String> taskList = new Pair<Context, String>(MainActivity.this, com.udacity.gradle.builditbigger.MainActivity.class.getSimpleName());
                 new GoogleEndPointsTask().execute(taskList);
             }
         });

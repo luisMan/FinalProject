@@ -2,8 +2,11 @@ package com.udacity.gradle.builditbigger;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.util.Pair;
+import android.text.TextUtils;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -13,12 +16,13 @@ import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
 
 import java.io.IOException;
 
+import tech.niocoders.com.jokelibrary.jokeActivity;
+
 public class GoogleEndPointsTask extends AsyncTask<Pair<Context, String>, Void,String> {
     //perfect now my api Servicee object is being recognized by the asynctask class object
     private static MyApi myApiService = null;
-    private static final String LOCAL_HOST = "http://10.0.2.2:8080/_ah/api/";
     private Context context;
-    private MainActivity myParentActivity;
+    private static final String LOCAL_HOST = "http://10.0.2.2:8080/_ah/api/";
 
     @Override
     protected String doInBackground(Pair<Context, String>... params) {
@@ -35,17 +39,11 @@ public class GoogleEndPointsTask extends AsyncTask<Pair<Context, String>, Void,S
                             abstractGoogleClientRequest.setDisableGZipContent(true);
                         }
                     });
-            // end options for devappserver
+            // end options
             myApiService = builder.build();
         }
 
-        //this is returning an object context activity it could be type fragment
         context = params[0].first;
-
-            myParentActivity = (MainActivity)context;
-
-        String name = params[0].second;
-
         try {
             return myApiService.getJokes().execute().getData();
         } catch (IOException e) {
@@ -55,8 +53,14 @@ public class GoogleEndPointsTask extends AsyncTask<Pair<Context, String>, Void,S
 
     @Override
     protected void onPostExecute(String result) {
-
-      myParentActivity.showEndPointJokes(result);
+      if(!TextUtils.isEmpty(result)) {
+          Class child = jokeActivity.class;
+          Bundle bundle = new Bundle();
+          bundle.putString(jokeActivity.JOKE_TEXT, result);
+          Intent intent = new Intent(context, child);
+          intent.putExtras(bundle);
+          context.startActivity(intent);
+      }
     }
 }
 
