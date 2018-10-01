@@ -43,7 +43,7 @@ public class GoogleEndPontTaskTest {
     @Test
     public void TestAsyncTaskEndpointCall()
     {
-        String jokeValue;
+        String jokeValue=null;
         //this is the way we can retrieve the context of a given activity
 
         Context mContext =  InstrumentationRegistry.getTargetContext();
@@ -52,11 +52,12 @@ public class GoogleEndPontTaskTest {
         jokerTest.execute(taskList);
          try{
             jokeValue =  jokerTest.get();
-             assertNotNull(jokeValue);
              Log.d("test", jokeValue);
          }catch(Exception e)
         {
              e.printStackTrace();
         }
+
+        assertNotNull(jokeValue);
     }
 }

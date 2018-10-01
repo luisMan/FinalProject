@@ -21,7 +21,6 @@ import tech.niocoders.com.jokelibrary.jokeActivity;
 
 
 public class MainActivity extends AppCompatActivity {
-    public static final String JOKE_TEXT="JOKE_TEXT";
     public static ProgressBar loader;
 
     private InterstitialAd mIterstitialAd;
@@ -65,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         Class child =  jokeActivity.class;
         Context context = this;
         Bundle bundle = new Bundle();
-        bundle.putString(JOKE_TEXT, text);
+        bundle.putString(jokeActivity.JOKE_TEXT, text);
         Intent intent = new Intent(context,child);
         intent.putExtras(bundle);
         startActivity(intent);

@@ -23,7 +23,7 @@ public class jokeClass {
     public String tellAJoke(){
         //lets construct a random joke
        Random ran = new Random();
-        return jokesData.get(ran.nextInt(jokesData.size()-1 + 0));
+        return jokesData.get(ran.nextInt(jokesData.size() + 0));
     }
 
 }
