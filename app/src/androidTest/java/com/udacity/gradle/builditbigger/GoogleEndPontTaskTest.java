@@ -58,6 +58,7 @@ public class GoogleEndPontTaskTest {
              e.printStackTrace();
         }
 
+        //lets try to check whether the text fail if the string is check outside of the try and catch tag
         assertNotNull(jokeValue);
     }
 }
